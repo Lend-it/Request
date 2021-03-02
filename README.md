@@ -1,4 +1,4 @@
-# Rating
+# Request
 
 Microsserviço responsável pelo sistema de pedidos de empréstimos.
 
