@@ -9,5 +9,3 @@ run-silent:
 
 test:
 	sudo docker-compose -f docker-compose.dev.yml run rating python manage.py test
-
-
