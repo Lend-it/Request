@@ -26,3 +26,10 @@ Com o Docker e Docker-Compose instalados, basta apenas utilizar os comandos:
 ```shell
     make test
 ```
+
+## Executando o linter
+Com o Docker e Docker-Compose instalados, basta apenas utilizar os comandos:  
+
+```shell
+    make lint
+```

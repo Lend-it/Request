@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 psycopg2-binary
 Flask-Testing
 flask_migrate
+black
