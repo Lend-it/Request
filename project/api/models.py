@@ -4,10 +4,13 @@ import uuid
 
 db = Singleton().database_connection()
 
+
 class Category(db.Model):
     __tablename__ = "product_category"
 
-    productcategoryid = db.Column(db.SmallInteger, primary_key=True, autoincrement=True, nullable=False)
+    productcategoryid = db.Column(
+        db.SmallInteger, primary_key=True, autoincrement=True, nullable=False
+    )
     name = db.Column(db.Text, nullable=False)
 
     def __init__(self, name):
@@ -24,9 +27,20 @@ class Request(db.Model):
     description = db.Column(db.Text, nullable=False)
     requester = db.Column(db.Text, nullable=False)
     lender = db.Column(db.Text, nullable=False)
-    productcategoryid = db.Column(db.SmallInteger, db.ForeignKey('product_category.productcategoryid'))
+    productcategoryid = db.Column(
+        db.SmallInteger, db.ForeignKey("product_category.productcategoryid")
+    )
 
-    def __init__(self, productname, startdate, enddate, description, requester, lender, productcategoryid):
+    def __init__(
+        self,
+        productname,
+        startdate,
+        enddate,
+        description,
+        requester,
+        lender,
+        productcategoryid,
+    ):
         self.productname = productname
         self.startdate = startdate
         self.enddate = enddate
