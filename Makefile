@@ -16,3 +16,12 @@ test:
 
 lint:
 	sudo docker-compose -f docker-compose.dev.yml run request black .
+
+check-db:
+	sudo docker-compose -f docker-compose.dev.yml exec db psql -U postgres
+
+down:
+	sudo docker-compose -f docker-compose.dev.yml down
+
+recreate-db:
+	sudo docker-compose -f docker-compose.dev.yml run request python manage.py recreate-db
