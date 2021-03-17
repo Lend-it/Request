@@ -1,5 +1,6 @@
 from database_singleton import Singleton
-from sqlalchemy.dialects.postgresql import UUID
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects import postgresql
 import uuid
 
 db = Singleton().database_connection()
@@ -20,7 +21,9 @@ class Category(db.Model):
 class Request(db.Model):
     __tablename__ = "request"
 
-    requestid = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    requestid = db.Column(
+        postgresql.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     productname = db.Column(db.Text, nullable=False)
     startdate = db.Column(db.Date, nullable=False)
     enddate = db.Column(db.Date, nullable=False)
@@ -48,3 +51,15 @@ class Request(db.Model):
         self.requester = requester
         self.lender = lender
         self.productcategoryid = productcategoryid
+
+    def to_json(self):
+        return {
+            "requestid": self.requestid,
+            "productname": self.productname,
+            "startdate": self.startdate,
+            "enddate": self.enddate,
+            "description": self.description,
+            "requester": self.requester,
+            "lender": self.lender,
+            "productcategoryid": self.productcategoryid,
+        }
