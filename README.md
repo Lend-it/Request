@@ -44,6 +44,13 @@ Microsserviço responsável pelo sistema de pedidos de empréstimos.
     make test
 ```
 
+## Rodando a cobertura dos testes
+
+
+```shell
+    make cov
+```
+
 ## Acessando o banco de dados 
 
 ```shell
