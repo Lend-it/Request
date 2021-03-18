@@ -25,3 +25,6 @@ down:
 
 recreate-db:
 	sudo docker-compose -f docker-compose.dev.yml run request python manage.py recreate-db
+
+cov:
+	sudo docker-compose -f docker-compose.dev.yml run request python manage.py cov
