@@ -17,6 +17,12 @@ class Category(db.Model):
     def __init__(self, name):
         self.name = name
 
+    def to_json(self):
+        return {
+            "productcategoryid": self.productcategoryid,
+            "name": self.name,
+        }
+
 
 class Request(db.Model):
     __tablename__ = "request"
