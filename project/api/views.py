@@ -43,6 +43,6 @@ def add_categories():
         }
 
         return jsonify(response), 201
-    except exc.IntegrityError as e:
+    except exc.IntegrityError:
         db.session.rollback()
         return jsonify(error_response), 400
