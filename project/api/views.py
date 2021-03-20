@@ -11,7 +11,7 @@ db = Singleton().database_connection()
 category_blueprint = Blueprint("categories", __name__)
 
 
-@category_blueprint.route("/api/product_category", methods=["GET"])
+@category_blueprint.route("/product_category", methods=["GET"])
 def get_all_request():
     response = {
         "status": "success",
@@ -22,7 +22,7 @@ def get_all_request():
     return jsonify(response), 200
 
 
-@category_blueprint.route("/api/product_category", methods=["POST"])
+@category_blueprint.route("/product_category", methods=["POST"])
 def add_categories():
     post_data = request.get_json()
 

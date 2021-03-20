@@ -13,24 +13,24 @@ class TestProductCategory(BaseTestCase):
         with self.client:
 
             self.client.post(
-                "/api/product_category",
+                "/product_category",
                 data=json.dumps({"name": "Eletrodomésticos"}),
                 content_type="application/json",
             )
 
             self.client.post(
-                "/api/product_category",
+                "/product_category",
                 data=json.dumps({"name": "Livros e revistas"}),
                 content_type="application/json",
             )
 
             self.client.post(
-                "/api/product_category",
+                "/product_category",
                 data=json.dumps({"name": "Eletrônicos"}),
                 content_type="application/json",
             )
 
-            response = self.client.get("/api/product_category")
+            response = self.client.get("/product_category")
             data = json.loads(response.data.decode())
             print(data)
 
@@ -45,4 +45,3 @@ class TestProductCategory(BaseTestCase):
 
             self.assertEqual(3, data["data"]["categories"][2]["productcategoryid"])
             self.assertIn("Eletrônicos", data["data"]["categories"][2]["name"])
-
