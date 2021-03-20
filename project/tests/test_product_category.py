@@ -45,4 +45,3 @@ class TestProductCategory(BaseTestCase):
 
             self.assertEqual(3, data["data"]["categories"][2]["productcategoryid"])
             self.assertIn("Eletrônicos", data["data"]["categories"][2]["name"])
-
