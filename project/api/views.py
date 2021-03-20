@@ -10,16 +10,7 @@ request_blueprint = Blueprint("requests", __name__)
 db = Singleton().database_connection()
 
 
-@request_blueprint.route("/api/requests", methods=["GET"])
-def get_all_request():
-    response = {
-        "status": "success",
-        "data": {"requests": [request.to_json() for request in Request.query.all()]},
-    }
-    return jsonify(response), 200
-
-
-@request_blueprint.route("/api/requests", methods=["POST"])
+@request_blueprint.route("/requests", methods=["POST"])
 def create_request():
     post_data = request.get_json()
 
@@ -53,5 +44,3 @@ def create_request():
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify(error_response), 400
-
-    return jsonify(content), 200

@@ -20,7 +20,6 @@ def create_app(script_info=None):
     migrate.init_app(app, db)
 
     app.register_blueprint(request_blueprint)
-    app.register_blueprint(request_blueprint)
 
     @app.shell_context_processor
     def ctx():
