@@ -1,10 +1,20 @@
+[![Lint](https://github.com/Lend-it/Request/actions/workflows/black.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/black.yml) [![SonarCloud analysis](https://github.com/Lend-it/Request/actions/workflows/sonar.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/sonar.yml) [![Commit Linter](https://github.com/Lend-it/Request/actions/workflows/commit-linter.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/commit-linter.yml) [![Application Test](https://github.com/Lend-it/Request/actions/workflows/app-test.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/app-test.yml)
 # Request
 
 Microsserviço responsável pelo sistema de pedidos de empréstimos.
 
-## Colocando no ar
+## Ambientes
+### Local
+**[Disponível na porta 5002.](http://localhost:5002/)**
 
-Com o Docker e Docker-Compose instalados, basta apenas utilizar os comandos:
+### Ambiente de homologação
+**[Disponível no Heroku](https://lendit-request-homolog.herokuapp.com/)**
+
+### Ambiente de produção
+**[Disponível no Heroku](https://lendit-request-prod.herokuapp.com/)**
+
+***
+## Colocando no ar localmente
 
 1. Build
 ```shell
@@ -18,17 +28,35 @@ Com o Docker e Docker-Compose instalados, basta apenas utilizar os comandos:
 ```shell
     make run-silent
 ```
+2.2 Buildar e executar
+```shell
+    make run-build
+```
+3. Desativar o container
+```shell
+    make down
+```
 
 ## Rodando os testes
-
-Com o Docker e Docker-Compose instalados, basta apenas utilizar os comandos:  
 
 ```shell
     make test
 ```
 
-## Executando o linter
-Com o Docker e Docker-Compose instalados, basta apenas utilizar os comandos:  
+## Rodando a cobertura dos testes
+
+
+```shell
+    make cov
+```
+
+## Acessando o banco de dados 
+
+```shell
+    make check-db
+```
+
+## Rodar o linter no código (Black) 
 
 ```shell
     make lint
