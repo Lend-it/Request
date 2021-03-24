@@ -140,3 +140,12 @@ def edit_request(requestid):
         }
         db.session.rollback()
         return jsonify(response), 400
+        
+@request_blueprint.route("/delete_request/<requestid>", methods=["DELETE"])
+def delete_request(requestid):
+    product = Request.query.filter_by(requestid=requestid).delete()
+    db.session.commit()
+
+    response = {"status": "success", "data": {"message": "Product deleted!"}}
+
+    return jsonify(response), 200
