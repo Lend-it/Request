@@ -79,3 +79,13 @@ def create_request():
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify(error_response), 400
+
+
+@request_blueprint.route("/delete_request/<requestid>", methods=["DELETE"])
+def delete_request(requestid):
+    product = Request.query.filter_by(requestid=requestid).delete()
+    db.session.commit()
+
+    response = {"status": "success", "data": {"message": "Product deleted!"}}
+
+    return jsonify(response), 200
