@@ -25,6 +25,8 @@ def get_all_request():
 
 @category_blueprint.route("/product_category", methods=["POST"])
 def add_categories():
+    post_data = request.get_json()
+
     if not post_data:
         return jsonify(error_response), 400
 
@@ -51,12 +53,15 @@ def create_request():
 
     error_response = {"status": "fail", "message": "Invalid payload."}
 
-    productname = (post_data.get("productname"),)
-    startdate = (post_data.get("startdate"),)
-    enddate = (post_data.get("enddate"),)
-    description = (post_data.get("description"),)
-    requester = (post_data.get("requester"),)
-    productcategoryid = (post_data.get("productcategoryid"),)
+    if not post_data:
+        return jsonify(error_response), 400
+
+    productname = post_data.get("productname")
+    startdate = post_data.get("startdate")
+    enddate = post_data.get("enddate")
+    description = post_data.get("description")
+    requester = post_data.get("requester")
+    productcategoryid = post_data.get("productcategoryid")
     lender = None
 
     lending_request = Request(
