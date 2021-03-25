@@ -27,6 +27,8 @@ def get_all_request():
 def add_categories():
     post_data = request.get_json()
 
+    error_response = {"status": "fail", "message": "Invalid payload."}
+
     if not post_data:
         return jsonify(error_response), 400
 
@@ -42,9 +44,16 @@ def add_categories():
         }
 
         return jsonify(response), 201
-    except exc.IntegrityError:
+    except Exception as err:
+        response = {
+            "status": "fail",
+            "data": {
+                "status": "Category not created",
+                "error_msg": err.to_json(),
+            },
+        }
         db.session.rollback()
-        return jsonify(error_response), 400
+        return jsonify(response), 400
 
 
 @request_blueprint.route("/requests", methods=["POST"])
