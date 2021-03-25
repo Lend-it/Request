@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from sqlalchemy import exc
+from sqlalchemy import exc, update
 
 from project.api.models import Request
 from project.api.models import Category
@@ -79,3 +79,47 @@ def create_request():
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify(error_response), 400
+
+
+@request_blueprint.route("/edit_request/<requestid>", methods=["PUT"])
+def edit_request(requestid):
+    try:
+        put_data = request.get_json()
+        request_obj = Request.query.filter_by(requestid=requestid).first()
+        old_obj = request_obj.to_json()
+
+        productname = put_data.get("productname")
+        request_obj.productname = productname
+
+        startdate = put_data.get("startdate")
+        request_obj.startdate = startdate
+
+        enddate = put_data.get("enddate")
+        request_obj.enddate = enddate
+
+        description = put_data.get("description")
+        request_obj.description = description
+
+        productcategoryid = put_data.get("productcategoryid")
+        request_obj.productcategoryid = productcategoryid
+
+        response = {
+            "status": "success",
+            "data": {
+                "update_status": "Update completed!",
+                "old_obj": old_obj,
+                "after_change": request_obj.to_json(),
+            },
+        }
+
+        return jsonify(response), 200
+    except Exception as err:
+        response = {
+            "status": "fail",
+            "data": {
+                "update_status": "Update not complete!",
+                "error_msg": err.to_json(),
+            },
+        }
+        db.session.rollback()
+        return jsonify(response), 400
