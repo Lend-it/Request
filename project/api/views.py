@@ -5,8 +5,7 @@ from sqlalchemy import exc
 from project.api.models import Request
 from project.api.models import Category
 from database_singleton import Singleton
-
-db = Singleton().database_connection()
+from project.api.models import  db
 
 category_blueprint = Blueprint("categories", __name__)
 request_blueprint = Blueprint("requests", __name__)
@@ -143,7 +142,8 @@ def edit_request(requestid):
         
 @request_blueprint.route("/delete_request/<requestid>", methods=["DELETE"])
 def delete_request(requestid):
-    product = Request.query.filter_by(requestid=requestid).delete()
+    product = Request.query.filter_by(requestid=requestid).first()
+    db.session.delete(product)
     db.session.commit()
 
     response = {"status": "success", "data": {"message": "Product deleted!"}}
