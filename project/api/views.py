@@ -138,8 +138,9 @@ def edit_request(requestid):
         }
         db.session.rollback()
         return jsonify(response), 400
-        
-@request_blueprint.route("/delete_request/<requestid>", methods=["DELETE"])
+
+
+@request_blueprint.route("/requests/<requestid>", methods=["DELETE"])
 def delete_request(requestid):
     request = Request.query.filter_by(requestid=requestid).first()
 
