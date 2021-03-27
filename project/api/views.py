@@ -1,12 +1,10 @@
 from flask import Blueprint, jsonify, request
-
 from sqlalchemy import exc
-
 from project.api.models import Request
+from project.api.models import db
 from project.api.models import Category
 from database_singleton import Singleton
 
-db = Singleton().database_connection()
 
 category_blueprint = Blueprint("categories", __name__)
 request_blueprint = Blueprint("requests", __name__)
@@ -140,3 +138,23 @@ def edit_request(requestid):
         }
         db.session.rollback()
         return jsonify(response), 400
+
+
+@request_blueprint.route("/requests/<requestid>", methods=["DELETE"])
+def delete_request(requestid):
+    request = Request.query.filter_by(requestid=requestid).first()
+
+    error_response = {"status": "fail", "message": "Could not delete request."}
+
+    if not request:
+        return jsonify(error_response), 404
+    try:
+        db.session.delete(request)
+        db.session.commit()
+
+        response = {"status": "success", "data": {"message": "Request deleted!"}}
+
+        return jsonify(response), 202
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        return jsonify(error_response), 400
