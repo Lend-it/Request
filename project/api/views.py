@@ -142,8 +142,14 @@ def edit_request(requestid):
         
 @request_blueprint.route("/delete_request/<requestid>", methods=["DELETE"])
 def delete_request(requestid):
-    product = Request.query.filter_by(requestid=requestid).first()
-    db.session.delete(product)
+    request = Request.query.filter_by(requestid=requestid).first()
+
+    error_response = {"status": "fail", "message": "Invalid payload."}
+
+    if not request:
+        return jsonify(error_response), 404
+
+    db.session.delete(request)
     db.session.commit()
 
     response = {"status": "success", "data": {"message": "Product deleted!"}}
