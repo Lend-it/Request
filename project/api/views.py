@@ -93,3 +93,50 @@ def create_request():
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify(error_response), 400
+
+
+@request_blueprint.route("/requests/<requestid>", methods=["PUT"])
+def edit_request(requestid):
+
+    put_data = request.get_json()
+    error_response = {"status": "fail", "message": "Invalid payload."}
+
+    if not put_data:
+        return jsonify(error_response), 400
+
+    request_obj = Request.query.filter_by(requestid=requestid).first()
+
+    productname = put_data.get("productname")
+    startdate = put_data.get("startdate")
+    enddate = put_data.get("enddate")
+    description = put_data.get("description")
+    productcategoryid = put_data.get("productcategoryid")
+
+    request_obj.productname = productname
+    request_obj.startdate = startdate
+    request_obj.enddate = enddate
+    request_obj.description = description
+    request_obj.productcategoryid = productcategoryid
+
+    try:
+        db.session.merge(request_obj)
+        db.session.commit()
+
+        response = {
+            "status": "success",
+            "data": {
+                "update_status": "Update completed!",
+            },
+        }
+
+        return jsonify(response), 201
+    except Exception as err:
+        response = {
+            "status": "fail",
+            "data": {
+                "update_status": "Update not complete!",
+                "error_msg": err.to_json(),
+            },
+        }
+        db.session.rollback()
+        return jsonify(response), 400
