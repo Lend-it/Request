@@ -4,7 +4,6 @@ from sqlalchemy import exc
 
 from project.api.models import Request
 from project.api.models import Category
-from project.api.models import db
 from database_singleton import Singleton
 
 db = Singleton().database_connection()
@@ -96,26 +95,30 @@ def create_request():
         return jsonify(error_response), 400
 
 
-@request_blueprint.route("/edit_request/<requestid>", methods=["PUT"])
+@request_blueprint.route("/requests/<requestid>", methods=["PUT"])
 def edit_request(requestid):
+
+    put_data = request.get_json()
+    error_response = {"status": "fail", "message": "Invalid payload."}
+
+    if not put_data:
+        return jsonify(error_response), 400
+
+    request_obj = Request.query.filter_by(requestid=requestid).first()
+
+    productname = put_data.get("productname")
+    startdate = put_data.get("startdate")
+    enddate = put_data.get("enddate")
+    description = put_data.get("description")
+    productcategoryid = put_data.get("productcategoryid")
+
+    request_obj.productname = productname
+    request_obj.startdate = startdate
+    request_obj.enddate = enddate
+    request_obj.description = description
+    request_obj.productcategoryid = productcategoryid
+
     try:
-        put_data = request.get_json()
-
-        request_obj = Request.query.filter_by(requestid=requestid).first()
-        old_obj = request_obj.to_json()
-
-        productname = put_data.get("productname")
-        startdate = put_data.get("startdate")
-        enddate = put_data.get("enddate")
-        description = put_data.get("description")
-        productcategoryid = put_data.get("productcategoryid")
-
-        request_obj.productname = productname
-        request_obj.startdate = startdate
-        request_obj.enddate = enddate
-        request_obj.description = description
-        request_obj.productcategoryid = productcategoryid
-
         db.session.merge(request_obj)
         db.session.commit()
 
@@ -123,8 +126,6 @@ def edit_request(requestid):
             "status": "success",
             "data": {
                 "update_status": "Update completed!",
-                "old_obj": old_obj,
-                "after_change": request_obj.to_json(),
             },
         }
 
