@@ -1,4 +1,4 @@
-[![Lint](https://github.com/Lend-it/Request/actions/workflows/black.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/black.yml) [![SonarCloud analysis](https://github.com/Lend-it/Request/actions/workflows/sonar.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/sonar.yml) [![Commit Linter](https://github.com/Lend-it/Request/actions/workflows/commit-linter.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/commit-linter.yml) [![Application Test](https://github.com/Lend-it/Request/actions/workflows/app-test.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/app-test.yml)
+[![Lint](https://github.com/Lend-it/Request/actions/workflows/black.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/black.yml) [![SonarCloud analysis](https://github.com/Lend-it/Request/actions/workflows/sonar.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/sonar.yml) [![Commit Linter](https://github.com/Lend-it/Request/actions/workflows/commit-linter.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/commit-linter.yml) [![Application Test](https://github.com/Lend-it/Request/actions/workflows/app-test.yml/badge.svg)](https://github.com/Lend-it/Request/actions/workflows/app-test.yml) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Lend-it_Request&metric=alert_status)](https://sonarcloud.io/dashboard?id=Lend-it_Request)
 # Request
 
 Microsserviço responsável pelo sistema de pedidos de empréstimos.
@@ -15,7 +15,6 @@ Microsserviço responsável pelo sistema de pedidos de empréstimos.
 
 ***
 ## Colocando no ar localmente
-
 
 1. Build
 ```shell
