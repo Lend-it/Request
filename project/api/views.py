@@ -5,7 +5,7 @@ from sqlalchemy import exc
 from project.api.models import Request
 from project.api.models import Category
 from database_singleton import Singleton
-from project.api.models import  db
+from project.api.models import db
 
 category_blueprint = Blueprint("categories", __name__)
 request_blueprint = Blueprint("requests", __name__)
