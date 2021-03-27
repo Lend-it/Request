@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request
 
-from sqlalchemy import exc, update
+from sqlalchemy import exc
 
 from project.api.models import Request
 from project.api.models import Category
+from project.api.models import db
 from database_singleton import Singleton
 
 db = Singleton().database_connection()
@@ -99,23 +100,24 @@ def create_request():
 def edit_request(requestid):
     try:
         put_data = request.get_json()
+
         request_obj = Request.query.filter_by(requestid=requestid).first()
         old_obj = request_obj.to_json()
 
         productname = put_data.get("productname")
-        request_obj.productname = productname
-
         startdate = put_data.get("startdate")
-        request_obj.startdate = startdate
-
         enddate = put_data.get("enddate")
-        request_obj.enddate = enddate
-
         description = put_data.get("description")
-        request_obj.description = description
-
         productcategoryid = put_data.get("productcategoryid")
+
+        request_obj.productname = productname
+        request_obj.startdate = startdate
+        request_obj.enddate = enddate
+        request_obj.description = description
         request_obj.productcategoryid = productcategoryid
+
+        db.session.merge(request_obj)
+        db.session.commit()
 
         response = {
             "status": "success",
@@ -126,7 +128,7 @@ def edit_request(requestid):
             },
         }
 
-        return jsonify(response), 200
+        return jsonify(response), 201
     except Exception as err:
         response = {
             "status": "fail",
