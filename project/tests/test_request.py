@@ -161,3 +161,36 @@ class TestRequest(BaseTestCase):
             )
             self.assertIn("Jogo da vida", data["data"]["requests"][2]["productname"])
             self.assertIn("War", data["data"]["requests"][3]["productname"])
+
+    def test_edit_request(self):
+        request = add_request(
+            "Uno",
+            "2020-09-12 00:00:00.000",
+            "2020-09-30 00:00:00.000",
+            "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!",
+            "tah_tu@email.com",
+            2,
+        )
+
+        with self.client:
+            response = self.client.put(
+                f"/requests/{request.requestid}",
+                data=json.dumps(
+                    {
+                        "productname": "Uno",
+                        "startdate": "2020-09-12 00:00:00.000",
+                        "enddate": "2020-09-30 00:00:00.000",
+                        "description": "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!",
+                        "requester": "tah_tu@email.com",
+                        "productcategoryid": 2,
+                        "lender": None,
+                    }
+                ),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 201)
+            self.assertIn("Update completed!", data["data"]["update_status"])
+            self.assertIn("success", data["status"])
