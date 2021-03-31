@@ -54,15 +54,6 @@ def add_categories():
         return jsonify(response), 400
 
 
-@request_blueprint.route("/requests", methods=["GET"])
-def get_all_request():
-    response = {
-        "status": "success",
-        "data": {"requests": [request.to_json() for request in Request.query.all()]},
-    }
-    return jsonify(response), 200
-
-
 @request_blueprint.route("/requests", methods=["POST"])
 def create_request():
     post_data = request.get_json()
