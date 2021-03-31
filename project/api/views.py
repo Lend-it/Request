@@ -1,11 +1,11 @@
 from flask import Blueprint, jsonify, request
-
 from sqlalchemy import exc
-
 from project.api.models import Request
+from project.api.models import db
 from project.api.models import Category
 from database_singleton import Singleton
 from project.api.models import db
+
 
 category_blueprint = Blueprint("categories", __name__)
 request_blueprint = Blueprint("requests", __name__)
@@ -55,6 +55,15 @@ def add_categories():
         return jsonify(response), 400
 
 
+@request_blueprint.route("/requests", methods=["GET"])
+def get_all_request():
+    response = {
+        "status": "success",
+        "data": {"requests": [request.to_json() for request in Request.query.all()]},
+    }
+    return jsonify(response), 200
+
+
 @request_blueprint.route("/requests", methods=["POST"])
 def create_request():
     post_data = request.get_json()
@@ -94,12 +103,99 @@ def create_request():
         return jsonify(error_response), 400
 
 
+@request_blueprint.route('/requests/<requestid>', methods=['PATCH'])
+def update_request_lender(requestid):
+    post_data = request.get_json()
+
+    error_response = {
+        'status': 'fail',
+        'message': 'Request not found'
+    }
+
+    try:
+        lender = post_data.get('lender')
+
+        product = Request.query.filter_by(requestid=requestid).first()
+        
+        if not product:
+            return jsonify(error_response), 404
+
+        product.lender = lender
+        db.session.commit()
+
+        response = {
+            'status': 'success',
+            'message': 'Request lender updated'
+        }
+
+    except:
+        return jsonify(error_response), 400
+
+    return jsonify(response), 200    
+
+
+@request_blueprint.route("/requests/<requestid>", methods=["PUT"])
+def edit_request(requestid):
+
+    put_data = request.get_json()
+    error_response = {"status": "fail", "message": "Invalid payload."}
+
+    if not put_data:
+        return jsonify(error_response), 400
+
+    request_obj = Request.query.filter_by(requestid=requestid).first()
+
+    productname = put_data.get("productname")
+    startdate = put_data.get("startdate")
+    enddate = put_data.get("enddate")
+    description = put_data.get("description")
+    productcategoryid = put_data.get("productcategoryid")
+
+    request_obj.productname = productname
+    request_obj.startdate = startdate
+    request_obj.enddate = enddate
+    request_obj.description = description
+    request_obj.productcategoryid = productcategoryid
+
+    try:
+        db.session.merge(request_obj)
+        db.session.commit()
+
+        response = {
+            "status": "success",
+            "data": {
+                "update_status": "Update completed!",
+            },
+        }
+
+        return jsonify(response), 201
+    except Exception as err:
+        response = {
+            "status": "fail",
+            "data": {
+                "update_status": "Update not complete!",
+                "error_msg": err.to_json(),
+            },
+        }
+        db.session.rollback()
+        return jsonify(response), 400
+
+
 @request_blueprint.route("/requests/<requestid>", methods=["DELETE"])
 def delete_request(requestid):
-    product = Request.query.filter_by(requestid=requestid).first()
-    db.session.delete(product)
-    db.session.commit()
+    request = Request.query.filter_by(requestid=requestid).first()
 
-    response = {"status": "success", "data": {"message": "Product deleted!"}}
+    error_response = {"status": "fail", "message": "Could not delete request."}
 
-    return jsonify(response), 200
+    if not request:
+        return jsonify(error_response), 404
+    try:
+        db.session.delete(request)
+        db.session.commit()
+
+        response = {"status": "success", "data": {"message": "Request deleted!"}}
+
+        return jsonify(response), 202
+    except exc.IntegrityError as e:
+        db.session.rollback()
+        return jsonify(error_response), 400
