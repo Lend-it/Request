@@ -194,3 +194,22 @@ class TestRequest(BaseTestCase):
             self.assertEqual(response.status_code, 201)
             self.assertIn("Update completed!", data["data"]["update_status"])
             self.assertIn("success", data["status"])
+
+    def test_delete_request(self):
+        request = add_request(
+            "Uno",
+            "2020-09-12 00:00:00.000",
+            "2020-09-30 00:00:00.000",
+            "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!",
+            "tah_tu@email.com",
+            2,
+        )
+
+        with self.client:
+            response = self.client.delete(f"/requests/{request.requestid}")
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Request deleted!", data["data"]["message"])
+            self.assertIn("success", data["status"])
