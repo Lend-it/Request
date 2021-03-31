@@ -7,6 +7,29 @@ from project.tests.utils import add_request, add_category
 
 
 class TestRequest(BaseTestCase):
+    def test_create_request(self):
+        with self.client:
+            response = self.client.post(
+                "/requests",
+                data=json.dumps(
+                    {
+                        "productname": "Batedeira",
+                        "startdate": "2020-09-12 00:00:00.000",
+                        "enddate": "2020-09-30 00:00:00.000",
+                        "description": "Preciso de uma batedeira para fazer meu bolo de aniversario.",
+                        "requester": "tah_tu@gmail.com",
+                        "productcategoryid": 1,
+                        "lender": None,
+                    }
+                ),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 201)
+            self.assertIn("success", data["status"])
+
     def test_get_all_requests(self):
         add_category("Eletrodomésticos")
         add_request(
@@ -133,3 +156,8 @@ class TestRequest(BaseTestCase):
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
+            self.assertIn(
+                "Banco Imobiliario", data["data"]["requests"][1]["productname"]
+            )
+            self.assertIn("Jogo da vida", data["data"]["requests"][2]["productname"])
+            self.assertIn("War", data["data"]["requests"][3]["productname"])
