@@ -103,35 +103,29 @@ def create_request():
         return jsonify(error_response), 400
 
 
-@request_blueprint.route('/requests/<requestid>', methods=['PATCH'])
+@request_blueprint.route("/requests/<requestid>", methods=["PATCH"])
 def update_request_lender(requestid):
     post_data = request.get_json()
 
-    error_response = {
-        'status': 'fail',
-        'message': 'Request not found'
-    }
+    error_response = {"status": "fail", "message": "Request not found"}
 
     try:
-        lender = post_data.get('lender')
+        lender = post_data.get("lender")
 
         product = Request.query.filter_by(requestid=requestid).first()
-        
+
         if not product:
             return jsonify(error_response), 404
 
         product.lender = lender
         db.session.commit()
 
-        response = {
-            'status': 'success',
-            'message': 'Request lender updated'
-        }
+        response = {"status": "success", "request": product.to_json()}
 
     except:
         return jsonify(error_response), 400
 
-    return jsonify(response), 200    
+    return jsonify(response), 200
 
 
 @request_blueprint.route("/requests/<requestid>", methods=["PUT"])
