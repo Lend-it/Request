@@ -108,21 +108,17 @@ def update_request_lender(requestid):
 
     error_response = {"status": "fail", "message": "Request not found"}
 
-    try:
-        lender = post_data.get("lender")
+    lender = post_data.get("lender")
 
-        product = Request.query.filter_by(requestid=requestid).first()
+    product = Request.query.filter_by(requestid=requestid).first()
 
-        if not product:
-            return jsonify(error_response), 404
+    if not product:
+        return jsonify(error_response), 404
 
-        product.lender = lender
-        db.session.commit()
+    product.lender = lender
+    db.session.commit()
 
-        response = {"status": "success", "request": product.to_json()}
-
-    except:
-        return jsonify(error_response), 400
+    response = {"status": "success", "request": product.to_json()}
 
     return jsonify(response), 200
 

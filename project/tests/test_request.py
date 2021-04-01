@@ -88,3 +88,14 @@ class TestRequest(BaseTestCase):
 
             data = json.loads(response.data.decode())
             self.assertIn("maia@email.com", data["request"]["lender"])
+
+    def test_update_lender_request(self):
+        with self.client:
+            response = self.client.patch(
+                "/requests/8d27b6c1-ac8a-4f29-97b0-96cef6938267",
+                data=json.dumps({"lender": "maia@email.com"}),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
