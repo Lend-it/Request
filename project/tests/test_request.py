@@ -89,7 +89,7 @@ class TestRequest(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertIn("maia@email.com", data["request"]["lender"])
 
-    def test_update_lender_request(self):
+    def test_cannot_update_non_existing_request_lender(self):
         with self.client:
             response = self.client.patch(
                 "/requests/8d27b6c1-ac8a-4f29-97b0-96cef6938267",

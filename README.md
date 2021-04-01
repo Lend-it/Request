@@ -47,7 +47,7 @@ Microsserviço responsável pelo sistema de pedidos de empréstimos.
 
 
 ```shell
-    make cov
+    make cov-html
 ```
 
 ## Acessando o banco de dados 
