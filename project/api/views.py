@@ -4,6 +4,7 @@ from project.api.models import Request
 from project.api.models import db
 from project.api.models import Category
 from database_singleton import Singleton
+from project.api.utils import get_category_name
 
 
 category_blueprint = Blueprint("categories", __name__)
@@ -56,9 +57,10 @@ def add_categories():
 
 @request_blueprint.route("/requests", methods=["GET"])
 def get_all_request():
+    requests = get_category_name([request.to_json() for request in Request.query.all()])
     response = {
         "status": "success",
-        "data": {"requests": [request.to_json() for request in Request.query.all()]},
+        "data": {"requests": requests},
     }
     return jsonify(response), 200
 
