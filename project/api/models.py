@@ -35,6 +35,7 @@ class Request(db.Model):
     enddate = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text, nullable=False)
     requester = db.Column(db.Text, nullable=False)
+    finalized = db.Column(db.Boolean, nullable=False)
     lender = db.Column(db.Text, nullable=False)
     productcategoryid = db.Column(
         db.SmallInteger, db.ForeignKey("product_category.productcategoryid")
@@ -47,6 +48,7 @@ class Request(db.Model):
         enddate,
         description,
         requester,
+        finalized,
         lender,
         productcategoryid,
     ):
@@ -55,6 +57,7 @@ class Request(db.Model):
         self.enddate = enddate
         self.description = description
         self.requester = requester
+        self.finalized = finalized
         self.lender = lender
         self.productcategoryid = productcategoryid
 
@@ -66,6 +69,7 @@ class Request(db.Model):
             "enddate": self.enddate,
             "description": self.description,
             "requester": self.requester,
+            "finalized": self.finalized,
             "lender": self.lender,
             "productcategoryid": self.productcategoryid,
         }
