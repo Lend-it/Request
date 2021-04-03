@@ -48,9 +48,9 @@ class Request(db.Model):
         enddate,
         description,
         requester,
-        finalized,
         lender,
         productcategoryid,
+        finalized,
     ):
         self.productname = productname
         self.startdate = startdate
