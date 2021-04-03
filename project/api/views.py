@@ -20,6 +20,7 @@ def get_all_categories():
     }
     return jsonify(response), 200
 
+
 @category_blueprint.route("/product_category", methods=["POST"])
 def add_categories():
     post_data = request.get_json()
@@ -66,9 +67,17 @@ def get_all_request():
 def get_filtered_request(productcategoryid):
     response = {
         "status": "success",
-        "data": {"requests": [request.to_json() for request in Request.query.filter_by(productcategoryid=productcategoryid).all()]},
+        "data": {
+            "requests": [
+                request.to_json()
+                for request in Request.query.filter_by(
+                    productcategoryid=productcategoryid
+                ).all()
+            ]
+        },
     }
     return jsonify(response), 200
+
 
 @request_blueprint.route("/requests", methods=["POST"])
 def create_request():
