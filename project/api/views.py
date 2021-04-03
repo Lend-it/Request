@@ -4,6 +4,7 @@ from project.api.models import Request
 from project.api.models import db
 from project.api.models import Category
 from database_singleton import Singleton
+from project.api.utils import get_category_name
 
 
 category_blueprint = Blueprint("categories", __name__)
@@ -56,9 +57,10 @@ def add_categories():
 
 @request_blueprint.route("/requests", methods=["GET"])
 def get_all_request():
+    requests = get_category_name([request.to_json() for request in Request.query.all()])
     response = {
         "status": "success",
-        "data": {"requests": [request.to_json() for request in Request.query.all()]},
+        "data": {"requests": requests},
     }
     return jsonify(response), 200
 
@@ -100,6 +102,27 @@ def create_request():
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify(error_response), 400
+
+
+@request_blueprint.route("/requests/<requestid>", methods=["PATCH"])
+def update_request_lender(requestid):
+    post_data = request.get_json()
+
+    error_response = {"status": "fail", "message": "Request not found"}
+
+    lender = post_data.get("lender")
+
+    product = Request.query.filter_by(requestid=requestid).first()
+
+    if not product:
+        return jsonify(error_response), 404
+
+    product.lender = lender
+    db.session.commit()
+
+    response = {"status": "success", "request": product.to_json()}
+
+    return jsonify(response), 200
 
 
 @request_blueprint.route("/requests/<requestid>", methods=["PUT"])

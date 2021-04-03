@@ -68,3 +68,34 @@ class TestRequest(BaseTestCase):
             )
             self.assertIn("Jogo da vida", data["data"]["requests"][1]["productname"])
             self.assertIn("War", data["data"]["requests"][2]["productname"])
+
+    def test_update_lender_request(self):
+        product = add_request(
+            "Banco Imobiliario",
+            "2020-09-12 00:00:00.000",
+            "2020-09-30 00:00:00.000",
+            "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
+            "matheus@email.com",
+            3,
+        )
+
+        with self.client:
+            response = self.client.patch(
+                f"/requests/{product.requestid}",
+                data=json.dumps({"lender": "maia@email.com"}),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+            self.assertIn("maia@email.com", data["request"]["lender"])
+
+    def test_cannot_update_non_existing_request_lender(self):
+        with self.client:
+            response = self.client.patch(
+                "/requests/8d27b6c1-ac8a-4f29-97b0-96cef6938267",
+                data=json.dumps({"lender": "maia@email.com"}),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
