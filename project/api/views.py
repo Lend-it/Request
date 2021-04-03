@@ -63,6 +63,22 @@ def get_all_request():
     return jsonify(response), 200
 
 
+@request_blueprint.route("/requests/<productcategoryid>", methods=["GET"])
+def get_filtered_request(productcategoryid):
+    response = {
+        "status": "success",
+        "data": {
+            "requests": [
+                request.to_json()
+                for request in Request.query.filter_by(
+                    productcategoryid=productcategoryid
+                ).all()
+            ]
+        },
+    }
+    return jsonify(response), 200
+
+
 @request_blueprint.route("/requests", methods=["POST"])
 def create_request():
     post_data = request.get_json()
