@@ -124,6 +124,23 @@ def update_request_lender(requestid):
     return jsonify(response), 200
 
 
+@request_blueprint.route("/requests/<requestid>/finalize", methods=["PATCH"])
+def finalize_request(requestid):
+    error_response = {"status": "fail", "message": "Request not found"}
+
+    product = Request.query.filter_by(requestid=requestid).first()
+
+    if not product:
+        return jsonify(error_response), 404
+
+    product.finalized = True
+    db.session.commit()
+
+    response = {"status": "success", "request": product.to_json()}
+
+    return jsonify(response), 200
+
+
 @request_blueprint.route("/requests/<requestid>", methods=["PUT"])
 def edit_request(requestid):
 
