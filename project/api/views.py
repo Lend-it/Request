@@ -43,7 +43,7 @@ def add_categories():
         }
 
         return jsonify(response), 201
-    except Exception as err:
+    except exc.IntegrityError:
         response = {
             "status": "fail",
             "data": {
@@ -159,7 +159,7 @@ def edit_request(requestid):
         }
 
         return jsonify(response), 201
-    except Exception as err:
+    except exc.IntegrityError:
         response = {
             "status": "fail",
             "data": {
@@ -177,7 +177,7 @@ def delete_request(requestid):
     error_response = {"status": "fail", "message": "Could not delete request."}
 
     if not request:
-        return jsonify(error_response), 400
+        return jsonify(error_response), 404
     try:
         db.session.delete(request)
         db.session.commit()
