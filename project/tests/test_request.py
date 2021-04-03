@@ -13,6 +13,7 @@ def add_request(
     productname, startdate, enddate, description, requester, productcategoryid
 ):
     lender = None
+    finalized = False
 
     request = Request(
         productname,
@@ -22,6 +23,7 @@ def add_request(
         requester,
         lender,
         productcategoryid,
+        finalized,
     )
 
     db.session.add(request)
@@ -63,11 +65,7 @@ class TestRequest(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn("success", data["status"])
 
-            self.assertIn(
-                "Banco Imobiliario", data["data"]["requests"][0]["productname"]
-            )
-            self.assertIn("Jogo da vida", data["data"]["requests"][1]["productname"])
-            self.assertIn("War", data["data"]["requests"][2]["productname"])
+            self.assertEqual(len(data["data"]["requests"]), 3)
 
     def test_update_lender_request(self):
         product = add_request(
@@ -94,6 +92,35 @@ class TestRequest(BaseTestCase):
             response = self.client.patch(
                 "/requests/8d27b6c1-ac8a-4f29-97b0-96cef6938267",
                 data=json.dumps({"lender": "maia@email.com"}),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 404)
+
+    def test_finalize_request(self):
+        product = add_request(
+            "Banco Imobiliario",
+            "2020-09-12 00:00:00.000",
+            "2020-09-30 00:00:00.000",
+            "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
+            "matheus@email.com",
+            3,
+        )
+
+        with self.client:
+            response = self.client.patch(
+                f"/requests/{product.requestid}/finalize",
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+            self.assertEqual(data["request"]["finalized"], True)
+
+    def test_cannot_finalize_non_existing_request(self):
+        with self.client:
+            response = self.client.patch(
+                "/requests/8d27b6c1-ac8a-4f29-97b0-96cef6938267/finalize",
                 content_type="application/json",
             )
 
