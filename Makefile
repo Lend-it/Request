@@ -30,9 +30,5 @@ recreate-db:
 	sudo docker-compose -f docker-compose.dev.yml run request python manage.py recreate-db
 
 cov-html:
-	@if [ -d "$(CURRENT_DIR)/htmlcov" ]; then \
-		google-chrome  $(CURRENT_DIR)/htmlcov/index.html; \
-	else \
-		sudo docker-compose -f docker-compose.dev.yml run request python manage.py cov; \
-		google-chrome  $(CURRENT_DIR)/htmlcov/index.html; \
-	fi
+	sudo docker-compose -f docker-compose.dev.yml run request python manage.py cov;
+	google-chrome  $(CURRENT_DIR)/htmlcov/index.html;
