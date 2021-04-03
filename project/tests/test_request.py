@@ -30,6 +30,20 @@ class TestRequest(BaseTestCase):
             self.assertEqual(response.status_code, 201)
             self.assertIn("success", data["status"])
 
+    def test_create_request_invalid_json(self):
+        with self.client:
+            response = self.client.post(
+                "/requests",
+                data=json.dumps({}),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 400)
+            self.assertIn("Invalid payload.", data["message"])
+            self.assertIn("fail", data["status"])
+
     def test_get_all_requests(self):
         add_category("Eletrodomésticos")
         add_request(
@@ -194,6 +208,15 @@ class TestRequest(BaseTestCase):
             self.assertEqual(response.status_code, 201)
             self.assertIn("Update completed!", data["data"]["update_status"])
             self.assertIn("success", data["status"])
+
+    def test_edit_request_inexistent_id(self):
+        with self.client:
+            response = self.client.put("/requests/8783472")
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 400)
+            self.assertIn("fail", data["status"])
+            self.assertIn("Invalid payload.", data["message"])
 
     def test_delete_request(self):
         request = add_request(
