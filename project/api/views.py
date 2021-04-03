@@ -206,7 +206,7 @@ def edit_request(requestid):
 def delete_request(requestid):
     request = Request.query.filter_by(requestid=requestid).first()
 
-    error_response = {"status": "fail", "message": "Could not delete request."}
+    error_response = {"status": "fail", "message": "Could not found request to delete."}
 
     if not request:
         return jsonify(error_response), 404
