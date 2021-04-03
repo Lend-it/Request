@@ -131,7 +131,7 @@ def edit_request(requestid):
     error_response = {"status": "fail", "message": "Invalid payload."}
 
     if not put_data:
-        return jsonify(error_response), 400
+        return jsonify(error_response), 404
 
     request_obj = Request.query.filter_by(requestid=requestid).first()
 
@@ -163,12 +163,7 @@ def edit_request(requestid):
         response = {
             "status": "fail",
             "data": {
-<<<<<<< HEAD
                 "update_status": "Could not update Request",
-=======
-                "update_status": "Update not complete!",
-                "error_msg": str(err),
->>>>>>> Changed function name
             },
         }
         db.session.rollback()
