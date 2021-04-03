@@ -23,6 +23,20 @@ class TestProductCategory(BaseTestCase):
             self.assertIn("Category Jogos was created!", data['data']['message'])
             self.assertIn('success', data['status'])
 
+    def test_add_categories_invalid_json(self):
+        with self.client:
+            response = self.client.post(
+                "/product_category",
+                data=json.dumps({}),
+                content_type="application/json",
+            )
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 400)
+            self.assertIn("Invalid payload.", data["message"])
+            self.assertIn("fail", data["status"])
+
     def test_get_all_category(self):
         add_category("Eletrodomésticos")
         add_category("Livros e revistas")
