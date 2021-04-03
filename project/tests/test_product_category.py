@@ -5,12 +5,14 @@ from project.api.models import Category
 from project.api.models import db
 from project.tests.utils import add_category
 
+PRODUCT_CATEGORY_BASE_URL = "/product_category"
+
 
 class TestProductCategory(BaseTestCase):
     def test_add_categories(self):
         with self.client:
             response = self.client.post(
-                "/product_category",
+                PRODUCT_CATEGORY_BASE_URL,
                 data=json.dumps({"name": "Jogos"}),
                 content_type="application/json",
             )
@@ -24,7 +26,7 @@ class TestProductCategory(BaseTestCase):
     def test_add_categories_invalid_json(self):
         with self.client:
             response = self.client.post(
-                "/product_category",
+                PRODUCT_CATEGORY_BASE_URL,
                 data=json.dumps({}),
                 content_type="application/json",
             )
@@ -41,7 +43,7 @@ class TestProductCategory(BaseTestCase):
         add_category("Eletrônicos")
 
         with self.client:
-            response = self.client.get("/product_category")
+            response = self.client.get(PRODUCT_CATEGORY_BASE_URL)
             data = json.loads(response.data.decode())
 
             self.assertEqual(response.status_code, 200)
