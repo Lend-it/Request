@@ -12,7 +12,7 @@ request_blueprint = Blueprint("requests", __name__)
 
 
 @category_blueprint.route("/product_category", methods=["GET"])
-def get_all_request():
+def get_all_categories():
     response = {
         "status": "success",
         "data": {
@@ -43,12 +43,11 @@ def add_categories():
         }
 
         return jsonify(response), 201
-    except Exception as err:
+    except exc.IntegrityError:
         response = {
             "status": "fail",
             "data": {
-                "status": "Category not created",
-                "error_msg": err.to_json(),
+                "status": "Could not create Category",
             },
         }
         db.session.rollback()
@@ -132,7 +131,7 @@ def edit_request(requestid):
     error_response = {"status": "fail", "message": "Invalid payload."}
 
     if not put_data:
-        return jsonify(error_response), 400
+        return jsonify(error_response), 404
 
     request_obj = Request.query.filter_by(requestid=requestid).first()
 
@@ -160,12 +159,11 @@ def edit_request(requestid):
         }
 
         return jsonify(response), 201
-    except Exception as err:
+    except exc.IntegrityError:
         response = {
             "status": "fail",
             "data": {
-                "update_status": "Update not complete!",
-                "error_msg": err.to_json(),
+                "update_status": "Could not update Request",
             },
         }
         db.session.rollback()
@@ -186,7 +184,7 @@ def delete_request(requestid):
 
         response = {"status": "success", "data": {"message": "Request deleted!"}}
 
-        return jsonify(response), 202
+        return jsonify(response), 200
     except exc.IntegrityError as e:
         db.session.rollback()
         return jsonify(error_response), 400
