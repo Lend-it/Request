@@ -9,6 +9,7 @@ COV = coverage.coverage(
         "project/api/models.py",
         "project/api/__init__.py",
         "project/__init__.py",
+        "project/api/utils.py",
     ],
 )
 COV.start()
@@ -18,12 +19,12 @@ import unittest
 from project import create_app
 from flask.cli import FlaskGroup
 from flask import current_app
-from database_singleton import Singleton
+
+from project.api.models import db
 
 # Config coverage report
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
-db = Singleton().database_connection()
 
 # new
 @cli.command()

@@ -1,9 +1,11 @@
 import os
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from database_singleton import Singleton
+from flask_migrate import Migrate
 from project.api.views import category_blueprint
 from project.api.views import request_blueprint
+
+migrate = Migrate()
 
 # instantiate the app
 def create_app(script_info=None):
@@ -14,8 +16,7 @@ def create_app(script_info=None):
     app_settings = os.getenv("APP_SETTINGS")
     app.config.from_object(app_settings)
 
-    db = Singleton().database_connection()
-    migrate = Singleton().migration()
+    from project.api.models import db
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -28,11 +29,3 @@ def create_app(script_info=None):
         return {"app": app, "db": db}
 
     return app
-
-
-app = create_app()
-
-
-@app.route("/users/ping", methods=["GET"])
-def ping_pong():
-    return jsonify({"status": "success", "message": "pong!"})

@@ -1,19 +1,9 @@
 import json
 import unittest
-
 from project.tests.base import BaseTestCase
-from database_singleton import Singleton
-
 from project.api.models import Category
-
-db = Singleton().database_connection()
-
-
-def add_category(name):
-    category = Category(name)
-    db.session.add(category)
-    db.session.commit()
-    return category
+from project.api.models import db
+from project.tests.utils import add_category
 
 
 class TestProductCategory(BaseTestCase):
