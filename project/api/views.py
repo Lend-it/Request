@@ -3,7 +3,6 @@ from sqlalchemy import exc
 from project.api.models import Request
 from project.api.models import db
 from project.api.models import Category
-from database_singleton import Singleton
 from project.api.utils import get_category_name
 
 

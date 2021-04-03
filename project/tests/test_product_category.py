@@ -1,12 +1,8 @@
 import json
 import unittest
-
 from project.tests.base import BaseTestCase
-from database_singleton import Singleton
-
 from project.api.models import Category
-
-db = Singleton().database_connection()
+from project.api.models import db
 
 
 def add_category(name):

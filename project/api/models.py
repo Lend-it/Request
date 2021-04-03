@@ -1,9 +1,8 @@
-from database_singleton import Singleton
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 import uuid
 
-db = Singleton().database_connection()
+db = SQLAlchemy()
 
 
 class Category(db.Model):
@@ -36,7 +35,7 @@ class Request(db.Model):
     description = db.Column(db.Text, nullable=False)
     requester = db.Column(db.Text, nullable=False)
     finalized = db.Column(db.Boolean, nullable=False)
-    lender = db.Column(db.Text, nullable=False)
+    lender = db.Column(db.Text, nullable=True)
     productcategoryid = db.Column(
         db.SmallInteger, db.ForeignKey("product_category.productcategoryid")
     )
