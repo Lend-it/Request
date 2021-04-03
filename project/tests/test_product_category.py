@@ -3,13 +3,7 @@ import unittest
 from project.tests.base import BaseTestCase
 from project.api.models import Category
 from project.api.models import db
-
-
-def add_category(name):
-    category = Category(name)
-    db.session.add(category)
-    db.session.commit()
-    return category
+from project.tests.utils import add_category
 
 
 class TestProductCategory(BaseTestCase):

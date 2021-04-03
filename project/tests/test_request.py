@@ -3,39 +3,19 @@ import unittest
 from project.tests.base import BaseTestCase
 from project.api.models import Request
 from project.api.models import db
-
-
-def add_request(
-    productname, startdate, enddate, description, requester, productcategoryid
-):
-    lender = None
-    finalized = False
-
-    request = Request(
-        productname,
-        startdate,
-        enddate,
-        description,
-        requester,
-        lender,
-        productcategoryid,
-        finalized,
-    )
-
-    db.session.add(request)
-    db.session.commit()
-    return request
+from project.tests.utils import add_request, add_category
 
 
 class TestRequest(BaseTestCase):
     def test_get_all_requests(self):
+        add_category("Eletrodomésticos")
         add_request(
             "Banco Imobiliario",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
         add_request(
             "Jogo da vida",
@@ -43,7 +23,7 @@ class TestRequest(BaseTestCase):
             "2020-09-30 00:00:00.000",
             "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
         add_request(
             "War",
@@ -51,7 +31,7 @@ class TestRequest(BaseTestCase):
             "2020-09-30 00:00:00.000",
             "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
 
         with self.client:
@@ -64,13 +44,14 @@ class TestRequest(BaseTestCase):
             self.assertEqual(len(data["data"]["requests"]), 3)
 
     def test_update_lender_request(self):
+        add_category("Eletrodomésticos")
         product = add_request(
             "Banco Imobiliario",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
 
         with self.client:
@@ -95,13 +76,14 @@ class TestRequest(BaseTestCase):
             self.assertEqual(response.status_code, 404)
 
     def test_finalize_request(self):
+        add_category("Eletrodomésticos")
         product = add_request(
             "Banco Imobiliario",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
 
         with self.client:
