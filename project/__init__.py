@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from project.api.views import category_blueprint
 from project.api.views import request_blueprint
 
+migrate = Migrate()
+
 # instantiate the app
 def create_app(script_info=None):
     # Instantiate the app
@@ -17,7 +19,7 @@ def create_app(script_info=None):
     from project.api.models import db
 
     db.init_app(app)
-    migrate = Migrate(app, db)
+    migrate.init_app(app, db)
 
     app.register_blueprint(category_blueprint)
     app.register_blueprint(request_blueprint)
