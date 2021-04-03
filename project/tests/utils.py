@@ -7,7 +7,6 @@ def add_request(
     productname, startdate, enddate, description, requester, productcategoryid
 ):
     lender = None
-    finalized = False
 
     request = Request(
         productname,
@@ -17,7 +16,6 @@ def add_request(
         requester,
         lender,
         productcategoryid,
-        finalized,
     )
 
     db.session.add(request)

@@ -8,6 +8,7 @@ from project.tests.utils import add_request, add_category
 
 class TestRequest(BaseTestCase):
     def test_create_request(self):
+        add_category("Eletrodomésticos")
         with self.client:
             response = self.client.post(
                 "/requests",
@@ -170,20 +171,18 @@ class TestRequest(BaseTestCase):
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
-            self.assertIn(
-                "Banco Imobiliario", data["data"]["requests"][1]["productname"]
-            )
-            self.assertIn("Jogo da vida", data["data"]["requests"][2]["productname"])
-            self.assertIn("War", data["data"]["requests"][3]["productname"])
+            self.assertEqual(data["status"], "fail")
+            self.assertEqual(data["message"], "Request not found")
 
     def test_edit_request(self):
+        add_category("Eletrodomésticos")
         request = add_request(
             "Uno",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!",
             "tah_tu@email.com",
-            2,
+            1,
         )
 
         with self.client:
@@ -196,7 +195,7 @@ class TestRequest(BaseTestCase):
                         "enddate": "2020-09-30 00:00:00.000",
                         "description": "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!",
                         "requester": "tah_tu@email.com",
-                        "productcategoryid": 2,
+                        "productcategoryid": 1,
                         "lender": None,
                     }
                 ),
@@ -214,18 +213,19 @@ class TestRequest(BaseTestCase):
             response = self.client.put("/requests/8783472")
             data = json.loads(response.data.decode())
 
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 404)
             self.assertIn("fail", data["status"])
             self.assertIn("Invalid payload.", data["message"])
 
     def test_delete_request(self):
+        add_category("Eletrodomésticos")
         request = add_request(
             "Uno",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!",
             "tah_tu@email.com",
-            2,
+            1,
         )
 
         with self.client:
@@ -236,3 +236,14 @@ class TestRequest(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn("Request deleted!", data["data"]["message"])
             self.assertIn("success", data["status"])
+
+    def test_delete_request_inexistent_id(self):
+        with self.client:
+            response = self.client.delete(
+                "/requests/8d27b6c1-ac8a-4f29-97b0-96cef6938267"
+            )
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 404)
+            self.assertIn("fail", data["status"])
+            self.assertIn("Could not found request to delete.", data["message"])
