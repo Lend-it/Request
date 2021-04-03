@@ -44,44 +44,33 @@ class TestRequest(BaseTestCase):
             self.assertEqual(len(data["data"]["requests"]), 3)
 
     def test_get_filtered_requests(self):
-        product = add_request(
-            "Banco Imobiliario",
-            "2020-09-12 00:00:00.000",
-            "2020-09-30 00:00:00.000",
-            "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
-            1,
-        )
-        product = add_request(
+        add_category("Eletrodomésticos")
+        add_request(
             "Jogo da vida",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
-        product = add_request(
+        add_request(
             "War",
             "2020-09-12 00:00:00.000",
             "2020-09-30 00:00:00.000",
             "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
             "matheus@email.com",
-            3,
+            1,
         )
 
         with self.client:
-            response = self.client.get(
-                f"/requests/{product.productcategoryid}",
-                data=json.dumps({"productcategoryid": 3}),
-                content_type="application/json",
-            )
+            response = self.client.get("/requests/1")
             data = json.loads(response.data.decode())
 
             self.assertEqual(response.status_code, 200)
             self.assertIn("success", data["status"])
 
-            self.assertIn("Jogo da vida", data["data"]["requests"][1]["productname"])
-            self.assertIn("War", data["data"]["requests"][2]["productname"])
+            self.assertIn("Jogo da vida", data["data"]["requests"][0]["productname"])
+            self.assertIn("War", data["data"]["requests"][1]["productname"])
 
     def test_update_lender_request(self):
         add_category("Eletrodomésticos")
