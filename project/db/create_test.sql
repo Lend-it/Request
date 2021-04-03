@@ -19,6 +19,7 @@ CREATE TABLE REQUEST (
     productName TEXT NOT NULL,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
+    finalized boolean NOT NULL DEFAULT false,
     description TEXT NOT NULL,
     requester TEXT NOT NULL,
     lender TEXT NULL,
