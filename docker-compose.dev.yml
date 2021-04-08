@@ -1,11 +1,11 @@
-version: '3.6'
+version: "3.6"
 services:
   request:
     build:
       context: .
       dockerfile: Dockerfile-dev
     volumes:
-      - '.:/app'
+      - ".:/app"
     ports:
       - 5002:5000
     environment:
@@ -15,7 +15,9 @@ services:
       - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/requestlenditdb_dev
       - DATABASE_TEST_URL=postgresql+psycopg2://postgres:postgres@db:5432/requestlenditdb_test
     depends_on:
-        - db
+      - db
+    networks:
+      - lendit_gateway
 
   db:
     image: postgres:13.2-alpine
@@ -26,3 +28,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - lendit_gateway
+
+networks:
+  lendit_gateway:
+    external: true
+    driver: "bridge"
