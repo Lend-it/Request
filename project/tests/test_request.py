@@ -12,6 +12,7 @@ FAKE_DESCRIPTION = (
 )
 FAKE_ENDDATE = "2020-09-30 00:00:00.000"
 FAKE_STARTDATE = "2020-09-12 00:00:00.000"
+FAKE_REQUESTER = "matheus@email.com"
 REQUEST_BASE_URL = "/requests"
 
 
@@ -61,7 +62,7 @@ class TestRequest(BaseTestCase):
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            FAKE_REQUESTER,
             1,
         )
         add_request(
@@ -69,7 +70,7 @@ class TestRequest(BaseTestCase):
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            FAKE_REQUESTER,
             1,
         )
         add_request(
@@ -77,7 +78,7 @@ class TestRequest(BaseTestCase):
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            FAKE_REQUESTER,
             1,
         )
 
@@ -90,14 +91,14 @@ class TestRequest(BaseTestCase):
 
             self.assertEqual(len(data["data"]["requests"]), 3)
 
-    def test_get_filtered_requests(self):
+    def test_get_all_requests_requester(self):
         add_category("Eletrodomésticos")
         add_request(
             "Jogo da vida",
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            FAKE_REQUESTER,
             1,
         )
         add_request(
@@ -105,7 +106,67 @@ class TestRequest(BaseTestCase):
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            "jose@email.com",
+            1,
+        )
+
+        with self.client:
+            response = self.client.get(
+                f"{REQUEST_BASE_URL}?requester=matheus@email.com"
+            )
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("success", data["status"])
+
+            self.assertEqual(len(data["data"]["requests"]), 1)
+
+    def test_get_all_requests_lender(self):
+        add_category("Eletrodomésticos")
+        add_request(
+            "Jogo da vida",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+            lender="jose@email.com",
+        )
+        add_request(
+            "War",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
+            "jose@email.com",
+            1,
+            lender="juca@email.com",
+        )
+
+        with self.client:
+            response = self.client.get(f"{REQUEST_BASE_URL}?lender=juca@email.com")
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("success", data["status"])
+
+            self.assertEqual(len(data["data"]["requests"]), 1)
+
+    def test_get_filtered_requests(self):
+        add_category("Eletrodomésticos")
+        add_request(
+            "Jogo da vida",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+        )
+        add_request(
+            "War",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
             1,
         )
 
@@ -126,7 +187,7 @@ class TestRequest(BaseTestCase):
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            FAKE_REQUESTER,
             1,
         )
 
@@ -158,7 +219,7 @@ class TestRequest(BaseTestCase):
             FAKE_STARTDATE,
             FAKE_ENDDATE,
             "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
-            "matheus@email.com",
+            FAKE_REQUESTER,
             1,
         )
 
