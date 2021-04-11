@@ -55,18 +55,25 @@ def add_categories():
 
 @request_blueprint.route("/requests", methods=["GET"])
 def get_all_request():
-    requester = request.args.get('requester')
-    lender = request.args.get('lender')
-    if(requester):
-        requests = get_category_name([request.to_json() for request in Request.query.filter_by(requester=requester)])
+    requester = request.args.get("requester")
+    lender = request.args.get("lender")
+    if requester:
+        requests = get_category_name(
+            [
+                request.to_json()
+                for request in Request.query.filter_by(requester=requester)
+            ]
+        )
         response = {
             "status": "success",
             "data": {"requests": requests},
         }
         return jsonify(response), 200
-    
-    elif(lender):
-        requests = get_category_name([request.to_json() for request in Request.query.filter_by(lender=lender)])
+
+    elif lender:
+        requests = get_category_name(
+            [request.to_json() for request in Request.query.filter_by(lender=lender)]
+        )
         response = {
             "status": "success",
             "data": {"requests": requests},
