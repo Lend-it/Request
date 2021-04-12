@@ -4,9 +4,14 @@ from project.api.models import db
 
 
 def add_request(
-    productname, startdate, enddate, description, requester, productcategoryid
+    productname,
+    startdate,
+    enddate,
+    description,
+    requester,
+    productcategoryid,
+    lender=None,
 ):
-    lender = None
 
     request = Request(
         productname,
