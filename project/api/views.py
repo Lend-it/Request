@@ -80,13 +80,9 @@ def get_all_request():
         }
         return jsonify(response), 200
 
-<<<<<<< HEAD
     requests = get_category_name(
         [request.to_json() for request in Request.query.filter_by(lender=None)]
     )
-=======
-    requests = get_category_name([request.to_json() for request in Request.query.filter_by(lender=None)])
->>>>>>> 299ab923e0fd42bb7ea96a17488c636c9428fb90
     response = {
         "status": "success",
         "data": {"requests": requests},
