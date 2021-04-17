@@ -90,7 +90,7 @@ def get_all_request():
     return jsonify(response), 200
 
 
-@request_blueprint.route("/requests/<usermail>", methods=["GET"])
+@request_blueprint.route("/requests/available/<usermail>", methods=["GET"])
 def get_all_available_requests(usermail):
     error_response = {"status": "fail", "message": "Request not found"}
 
@@ -106,7 +106,7 @@ def get_all_available_requests(usermail):
 
     response = {
         "status": "success",
-        "data": {"available requests": available_requests},
+        "data": {"available_requests": available_requests},
     }
     return jsonify(response), 200
 
