@@ -90,6 +90,29 @@ def get_all_request():
     return jsonify(response), 200
 
 
+@request_blueprint.route("/requests/available", methods=["GET"])
+def get_all_available_requests():
+    usermail = request.args.get("usermail")
+
+    error_response = {"status": "fail", "message": "Request not found"}
+
+    available_requests = [
+        request.to_json()
+        for request in Request.query.filter(
+            Request.lender == None, Request.requester != usermail
+        ).all()
+    ]
+
+    if not available_requests:
+        return jsonify(error_response), 404
+
+    response = {
+        "status": "success",
+        "data": {"available requests": get_category_name(available_requests)},
+    }
+    return jsonify(response), 200
+
+
 @request_blueprint.route("/requests/<productcategoryid>", methods=["GET"])
 def get_filtered_request(productcategoryid):
     requests = get_category_name(
