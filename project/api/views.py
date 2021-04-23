@@ -10,11 +10,6 @@ category_blueprint = Blueprint("categories", __name__)
 request_blueprint = Blueprint("requests", __name__)
 
 
-def convert_enddate(enddate):
-    parsed_date = date.fromisoformat(enddate)
-    return parsed_date
-
-
 @category_blueprint.route("/product_category", methods=["GET"])
 def get_all_categories():
     response = {
@@ -62,6 +57,7 @@ def add_categories():
 def get_all_request():
     requester = request.args.get("requester")
     lender = request.args.get("lender")
+
     if requester:
         requests = get_category_name(
             [
@@ -124,16 +120,30 @@ def get_all_available_requests():
     return jsonify(response), 200
 
 
-@request_blueprint.route("/requests/<productcategoryid>", methods=["GET"])
-def get_filtered_request(productcategoryid):
+@request_blueprint.route("/requests/available/<productcategoryid>", methods=["GET"])
+def get_requests_filtered_by_category(productcategoryid):
+    usermail = request.args.get("usermail")
+
+    today_date = datetime.now()
+    today_date = today_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    today_date.isoformat()
+
+    error_response = {"status": "fail", "message": "Request not found"}
+
     requests = get_category_name(
         [
             request.to_json()
-            for request in Request.query.filter_by(
-                productcategoryid=productcategoryid
+            for request in Request.query.filter(
+                Request.lender == None,
+                Request.requester != usermail,
+                Request.enddate >= today_date,
+                Request.productcategoryid == productcategoryid,
             ).all()
         ]
     )
+
+    if not requests:
+        return jsonify(error_response), 404
 
     response = {
         "status": "success",
