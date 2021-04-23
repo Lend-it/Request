@@ -4,10 +4,15 @@ from project.api.models import Request
 from project.api.models import db
 from project.api.models import Category
 from project.api.utils import get_category_name
-
+from datetime import datetime, date
 
 category_blueprint = Blueprint("categories", __name__)
 request_blueprint = Blueprint("requests", __name__)
+
+
+def convert_enddate(enddate):
+    parsed_date = date.fromisoformat(enddate)
+    return parsed_date
 
 
 @category_blueprint.route("/product_category", methods=["GET"])
@@ -94,12 +99,18 @@ def get_all_request():
 def get_all_available_requests():
     usermail = request.args.get("usermail")
 
+    today_date = datetime.now()
+    today_date = today_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    today_date.isoformat()
+
     error_response = {"status": "fail", "message": "Request not found"}
 
     available_requests = [
         request.to_json()
         for request in Request.query.filter(
-            Request.lender == None, Request.requester != usermail
+            Request.lender == None,
+            Request.requester != usermail,
+            Request.enddate >= today_date,
         ).all()
     ]
 

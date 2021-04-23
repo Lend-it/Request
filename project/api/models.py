@@ -62,8 +62,8 @@ class Request(db.Model):
         return {
             "requestid": self.requestid,
             "productname": self.productname,
-            "startdate": self.startdate,
-            "enddate": self.enddate,
+            "startdate": self.startdate.isoformat(),
+            "enddate": self.enddate.isoformat(),
             "description": self.description,
             "requester": self.requester,
             "finalized": self.finalized,
