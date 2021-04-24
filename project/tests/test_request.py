@@ -10,7 +10,7 @@ FAKE_EMAIL = "tah_tu@email.com"
 FAKE_DESCRIPTION = (
     "Queria um Uno emprestado para jogar com meus amigos neste fim de semana!"
 )
-FAKE_ENDDATE = "2020-09-30 00:00:00.000"
+FAKE_ENDDATE = "2021-09-30 00:00:00.000"
 FAKE_STARTDATE = "2020-09-12 00:00:00.000"
 FAKE_REQUESTER = "matheus@email.com"
 REQUEST_BASE_URL = "/requests"
@@ -151,8 +151,8 @@ class TestRequest(BaseTestCase):
 
             self.assertEqual(len(data["data"]["requests"]), 1)
 
-    def test_get_filtered_requests(self):
-        add_category("Eletrodomésticos")
+    def test_get_requests_filtered_by_category(self):
+        add_category("Jogos")
         add_request(
             "Jogo da vida",
             FAKE_STARTDATE,
@@ -171,7 +171,9 @@ class TestRequest(BaseTestCase):
         )
 
         with self.client:
-            response = self.client.get(f"{REQUEST_BASE_URL}/1")
+            response = self.client.get(
+                f"{REQUEST_BASE_URL}/available/1?usermail={FAKE_EMAIL}"
+            )
             data = json.loads(response.data.decode())
 
             self.assertEqual(response.status_code, 200)
