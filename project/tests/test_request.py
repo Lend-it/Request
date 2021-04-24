@@ -91,6 +91,81 @@ class TestRequest(BaseTestCase):
 
             self.assertEqual(len(data["data"]["requests"]), 3)
 
+    def test_get_all_available_requests(self):
+        add_category("Eletrodomésticos")
+        add_request(
+            "Banco Imobiliario",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+        )
+        add_request(
+            "Jogo da vida",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+        )
+        add_request(
+            "War",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+        )
+
+        with self.client:
+            response = self.client.get(
+                f"{REQUEST_BASE_URL}/available?usermail={FAKE_EMAIL}"
+            )
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("success", data["status"])
+
+            self.assertEqual(len(data["data"]["available requests"]), 3)
+
+    def test_not_available_requests(self):
+        add_category("Eletrodomésticos")
+        add_request(
+            "Banco Imobiliario",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um banco imobiliário emprestado para jogar com meus amigos neste fim de semana!",
+            "tah_tu@email.com",
+            1,
+        )
+        add_request(
+            "Jogo da vida",
+            FAKE_STARTDATE,
+            "2021-01-30 00:00:00.000",
+            "Queria um jogo da vida emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+        )
+        add_request(
+            "War",
+            FAKE_STARTDATE,
+            FAKE_ENDDATE,
+            "Queria um war emprestado para jogar com meus amigos neste fim de semana!",
+            FAKE_REQUESTER,
+            1,
+            lender="jose@email.com",
+        )
+
+        with self.client:
+            response = self.client.get(
+                f"{REQUEST_BASE_URL}/available?usermail={FAKE_EMAIL}"
+            )
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 404)
+            self.assertIn("fail", data["status"])
+
     def test_get_all_requests_requester(self):
         add_category("Eletrodomésticos")
         add_request(
