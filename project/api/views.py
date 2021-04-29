@@ -95,9 +95,7 @@ def get_all_request():
 def get_all_available_requests():
     usermail = request.args.get("usermail")
 
-    today_date = datetime.now()
-    today_date = today_date.replace(hour=0, minute=0, second=0, microsecond=0)
-    today_date.isoformat()
+    today_date = datetime.now().date().isoformat()
 
     error_response = {"status": "fail", "message": "Request not found"}
 
@@ -124,9 +122,7 @@ def get_all_available_requests():
 def get_requests_filtered_by_category(productcategoryid):
     usermail = request.args.get("usermail")
 
-    today_date = datetime.now()
-    today_date = today_date.replace(hour=0, minute=0, second=0, microsecond=0)
-    today_date.isoformat()
+    today_date = datetime.now().date().isoformat()
 
     error_response = {"status": "fail", "message": "Request not found"}
 
