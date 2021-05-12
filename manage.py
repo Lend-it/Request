@@ -10,6 +10,7 @@ COV = coverage.coverage(
         "project/api/__init__.py",
         "project/__init__.py",
         "project/api/utils.py",
+        "manage.py",
     ],
 )
 COV.start()
